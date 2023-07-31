@@ -1,31 +1,25 @@
 import { useContext } from "react";
 import FormValidator from "../features/components/FormValidator";
 import {
-  useUserId,
-  useUserIdUpdate,
+  useGlobals,
+  useGlobalsUpdate,
 } from "../features/components/GlobalsContext";
 import { useNavigate } from "react-router-dom";
 import "./RegistrationFormStyle.scss";
 
 export const RegistrationForm = () => {
-  let selectedUser = useUserId();
+  let selectedUser = useGlobals();
   const navigate = useNavigate();
-  const setselectedUser = useUserIdUpdate();
+  const setselectedUser = useGlobalsUpdate();
 
   const handleSubmit = async (e, formData) => {
     e.preventDefault();
     if (isFormValid(formData)) {
-      console.log(formData);
-
       if (selectedUser) {
-        console.log("editing in DB");
-
         try {
           delete formData._id;
-          console.log(JSON.stringify(formData));
-          console.log(`http://127.0.0.1:3000/posts/${selectedUser._id}`);
           const response = await fetch(
-            `http://127.0.0.1:3000/posts/${selectedUser._id}`,
+            `http://127.0.0.1:3000/participants/${selectedUser._id}`,
             {
               method: "PUT",
               headers: {
@@ -36,18 +30,18 @@ export const RegistrationForm = () => {
           );
 
           if (response.ok) {
-            console.log("User data updated successfully!");
+            alert("User data updated successfully!");
             navigate("/usersList");
             setselectedUser(null);
           } else {
-            console.log("Failed to update user data.", response);
+            alert("Failed to update user data.", response);
           }
         } catch (error) {
-          console.log("An error occurred:", error);
+          alert("An error occurred:", error);
         }
       } else {
         try {
-          const response = await fetch("http://127.0.0.1:3000/posts", {
+          const response = await fetch("http://127.0.0.1:3000/participants", {
             method: "POST",
             redirect: "follow",
             headers: {
@@ -57,17 +51,17 @@ export const RegistrationForm = () => {
           });
 
           if (response.ok) {
-            console.log("Form data submitted successfully!");
+            alert("Form data submitted successfully!");
             navigate("/usersList");
           } else {
-            console.log("Failed to submit form data.", response);
+            alert("Failed to submit form data.", response);
           }
         } catch (error) {
-          console.log("An error occurred:", error);
+          alert("An error occurred:", error);
         }
       }
     } else {
-      console.log("Please fill in all fields.");
+      alert("Please fill in all fields.");
     }
   };
 

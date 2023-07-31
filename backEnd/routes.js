@@ -1,11 +1,11 @@
 const express = require("express");
-const postsController = require("./controllers/posts.controller.js");
+const participantsController = require("./controllers/participants.controller.js");
 const cors = require("cors");
 
 const routes = (app) => {
   app.use(express.json());
   app.use(cors());
-  app.use("/posts", postsController);
+  app.use("/participants", participantsController);
 };
 
 module.exports = routes;

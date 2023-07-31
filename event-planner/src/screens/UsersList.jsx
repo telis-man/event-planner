@@ -1,22 +1,18 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import {
-  useUserId,
-  useUserIdUpdate,
-} from "../features/components/GlobalsContext";
+import { useGlobalsUpdate } from "../features/components/GlobalsContext";
 import "./UsersListStyle.scss";
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const setUserId = useUserIdUpdate();
+  const setUserId = useGlobalsUpdate();
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:3000/posts");
+        const response = await fetch("http://127.0.0.1:3000/participants");
         const data = await response.json();
-        console.log(data);
         setUsers(data);
         setLoading(false);
       } catch (error) {
@@ -30,12 +26,14 @@ const UsersList = () => {
 
   const handleDelete = async (user) => {
     try {
-      const response = await fetch(`http://127.0.0.1:3000/posts/${user._id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://127.0.0.1:3000/participants/${user._id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (response.ok) {
-        console.log("Post deleted successfully!");
         window.location.reload();
       } else {
         console.log("Failed to delete post.", response);
@@ -67,7 +65,6 @@ const UsersList = () => {
                 <button
                   onClick={() => {
                     setUserId(user);
-                    console.log("selected user added:", user);
                   }}
                 >
                   <Link to="/">Edit</Link>
